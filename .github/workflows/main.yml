@@ -44,4 +44,9 @@ jobs:
         run: snowsql --version
 
       - name: Run SnowSQL Command
-        run: snowsql -q "SHOW DATABASES;"
+        run: snowsql -q "SHOW DATABASES;" > output.log
+
+      - name: Display SnowSQL Output
+        run: cat output.log
+
+        
