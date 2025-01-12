@@ -16,7 +16,6 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libssl1.1 openssl
 
       - name: Download SnowSQL
         run: |
