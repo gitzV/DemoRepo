@@ -45,7 +45,7 @@ jobs:
 
       - name: Check SnowSQL Version
         run: |
-          ~/.snowsql/bin/snowsql --version
+          ~/.snowsql/snowsql --version
           
       - name: Run SnowSQL show db Command
         run: snowsql -q "SHOW DATABASES;"
