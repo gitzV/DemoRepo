@@ -27,25 +27,22 @@ jobs:
           echo "export PATH=~/snowflake:$PATH" >> ~/.profile
           source ~/.profile
 
+
       - name: Configure SnowSQL
         run: |
           mkdir -p ~/.snowsql
-          echo "[connections]" > ~/.snowsql/config
-          echo "accountname = nsiaocm-zm98259" >> ~/.snowsql/config
-          echo "username = SANJAYS" >> ~/.snowsql/config
-          echo "password = Temp@123$" >> ~/.snowsql/config
-          echo "role = ACCOUNTADMIN" >> ~/.snowsql/config
-          echo "database = TFDB" >> ~/.snowsql/config
-          echo "schema = DEV" >> ~/.snowsql/config
+          cat > ~/.snowsql/config << EOF
+          [connections]
+          accountname = nsiaocm-zm98259
+          username = SANJAYS
+          password = Temp@123$
+          role = ACCOUNTADMIN
+          database = TFDB
+          schema = DEV
+          EOF
+          chmod 600 ~/.snowsql/config
 
-      - name: Query Database
-        run: |
-          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-          ~/snowflake/snowsql -q "
-          USE ROLE ACCOUNTADMIN;
-          USE DATABASE TFDB;
-          USE SCHEMA DEV;
-          SHOW DATABASES;
-          SHOW SCHEMAS IN DATABASE TFDB;
-          SHOW TABLES IN SCHEMA TFDB.DEV;
-          "
+
+      - name: Run SnowSQL show db Command
+        run: snowsql -q "SHOW DATABASES;"
+          
