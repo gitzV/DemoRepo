@@ -43,8 +43,9 @@ jobs:
           chmod 600 ~/.snowsql/config
 
 
-      - name: Run SnowSQL show db Command
-        run: snowsql --version
+      - name: Check SnowSQL Version
+        run: |
+          ~/.snowsql/bin/snowsql --version
           
       - name: Run SnowSQL show db Command
         run: snowsql -q "SHOW DATABASES;"
