@@ -16,7 +16,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-
+          
       - name: Download SnowSQL
         run: |
           curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.28-linux_x86_64.bash
@@ -24,9 +24,7 @@ jobs:
       - name: Install SnowSQL
         run: |
           SNOWSQL_DEST=~/snowflake SNOWSQL_LOGIN_SHELL=~/.profile bash snowsql-1.2.28-linux_x86_64.bash
-          echo "export PATH=~/snowflake:$PATH" >> ~/.profile
-          source ~/.profile
-
+          echo "$HOME/snowflake" >> $GITHUB_PATH
 
       - name: Configure SnowSQL
         run: |
@@ -42,11 +40,8 @@ jobs:
           EOF
           chmod 600 ~/.snowsql/config
 
-
       - name: Check SnowSQL Version
-        run: |
-          ~/.snowsql/snowsql --version
-          
-      - name: Run SnowSQL show db Command
+        run: snowsql --version
+
+      - name: Run SnowSQL Command
         run: snowsql -q "SHOW DATABASES;"
-          
