@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - dev
+      - qa
+      - main
+
+
+jobs:
+  snowflake-query:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl1.1 openssl
+
+      - name: Download SnowSQL
+        run: |
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.28-linux_x86_64.bash
+
+      - name: Install SnowSQL
+        run: |
+          SNOWSQL_DEST=~/snowflake SNOWSQL_LOGIN_SHELL=~/.profile bash snowsql-1.2.28-linux_x86_64.bash
+          echo "export PATH=~/snowflake:$PATH" >> ~/.profile
+          source ~/.profile
+
+      - name: Configure SnowSQL
+        run: |
+          mkdir -p ~/.snowsql
+          echo "[connections]" > ~/.snowsql/config
+          echo "accountname = nsiaocm-zm98259" >> ~/.snowsql/config
+          echo "username = SANJAYS" >> ~/.snowsql/config
+          echo "password = Temp@123$" >> ~/.snowsql/config
+          echo "role = ACCOUNTADMIN" >> ~/.snowsql/config
+          echo "database = TFDB" >> ~/.snowsql/config
+          echo "schema = DEV" >> ~/.snowsql/config
+
+      - name: Query Database
+        run: |
+          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          ~/snowflake/snowsql -q "
+          USE ROLE ACCOUNTADMIN;
+          USE DATABASE TFDB;
+          USE SCHEMA DEV;
+          SHOW DATABASES;
+          SHOW SCHEMAS IN DATABASE TFDB;
+          SHOW TABLES IN SCHEMA TFDB.DEV;
+          "
